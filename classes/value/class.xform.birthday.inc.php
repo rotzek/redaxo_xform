@@ -1,6 +1,6 @@
 <?php
 
-// TODO: Formatierung optional änderbar
+// TODO: Formatierung optional Ã¤nderbar
 // Format: 1972-11-19
 
 class rex_xform_birthday extends rex_xform_abstract
@@ -31,10 +31,15 @@ class rex_xform_birthday extends rex_xform_abstract
 		$datum = $isodatum;
 
 		$twarning = "";
+		$wc = '';
 		if (isset($this->elements[4]) && $this->elements[4]==1 && !checkdate($month,$day,$year) && $send == 1)
 		{
-			$twarning = 'border:1px solid #f99;background-color:#f9f3f3;';
-			$warning[] = "Geburtsdatum ist falsch";
+	
+			
+			$this->params["warning"][$this->getId()] = $this->elements[5];
+			$this->params["warning_messages"][$this->getId()] = $this->elements[5];
+			$wc = $this->params["error_class"];
+			
 		}else
 		{
 			$email_elements[$this->elements[1]] = "$day.$month.$year";
@@ -45,12 +50,13 @@ class rex_xform_birthday extends rex_xform_abstract
 		
 		$out = "";
 		$out .= '
-		<p class="formbirthday" id="'.$this->getHTMLId().'">
-					<label class="select" for="'.$this->getFieldId().'" >'.$this->elements[2].'</label>';
+		<p class="formbirthday">
+					<label class="select" for="el_'.$this->id.'" >'.$this->elements[2].'</label>';
 					
 		$dsel = new rex_select;
 		$dsel->setName($formname.'[day]');
-		$dsel->setStyle("width:50px;".$twarning);
+//		$dsel->setStyle("width:50px;".$twarning);
+		$dsel->setStyle('class="day'.$wc.'"');
 		$dsel->setId('el_'.$this->id.'_day');
 		$dsel->setSize(1);
 		$dsel->addOption("TT","0");
@@ -63,7 +69,8 @@ class rex_xform_birthday extends rex_xform_abstract
 
 		$msel = new rex_select;
 		$msel->setName($formname.'[month]');
-		$msel->setStyle("width:50px;".$twarning);
+//		$msel->setStyle("width:50px;".$twarning);
+		$msel->setStyle('class="month'.$wc.'"');
 		$msel->setId('el_'.$this->id.'_month');
 		$msel->setSize(1);
 		$msel->addOption("MM","0");
@@ -76,7 +83,8 @@ class rex_xform_birthday extends rex_xform_abstract
 
 		$ysel = new rex_select;
 		$ysel->setName($formname.'[year]');
-		$ysel->setStyle("width:80px;".$twarning);
+//		$ysel->setStyle("width:80px;".$twarning);
+		$ysel->setStyle('class="year'.$wc.'"');
 		$ysel->setId('el_'.$this->id.'_year');
 		$ysel->setSize(1);
 		$ysel->addOption("YYYY","0");
@@ -94,7 +102,7 @@ class rex_xform_birthday extends rex_xform_abstract
 	}
 	function getDescription()
 	{
-		return "birthday -> Beispiel: birthday|feldname|Text *|[format: Y-m-d]|Pflicht";
+		return "birthday -> Beispiel: birthday|feldname|Text *|[format: Y-m-d]|Pflicht|Fehlermeldung";
 	}
 }
 
